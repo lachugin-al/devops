@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./postgres_db/:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=lachugin.a.l@icloud.com
+      - PGADMIN_DEFAULT_PASSWORD=qwerty
+      - PGADMIN_CONFIG_SERVER_MODE=True
+    volumes:
+      - ./pgadmin/:/root/.pgadmin
+    ports:
+      - ${PGADMIN_PORT:-5050}:80

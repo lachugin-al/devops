@@ -1,0 +1,49 @@
+Pgadmin4
+localhost
+postgres
+qwerty
+
+docker-compose up -d
+docker-compose exec postgres bin/bash
+psql --host=localhost --username=postgres --dbname=postgres
+docker network inspect www_postgres
+
+psql -h localhost -U postgres -d postgres
+\d
+\c shop
+references
+foreign key
+
+insert into customer(name, phone, email) values ('','','')
+select * from customer;
+
+        pp - алиас (pp.* - все)
+select pp.*, p.name from product_photo pp left join product p on p.id=pp.product_id;
+left означает что левая таблица (product_photo) она является главной и выбираются те строки,
+которые присутствуют в лефой таблице
+
+удаление foreign key
+alter table product_photo drop constraint product_photo_product_id_fkey
+
+delete from product_photo where id=2;
+update product_photo set url='iphone_image_2' where id=1;
+
+достаем имена клиентов с общей ссуммной их заказов
+select c.name, cart.id as cart_id, cp.product_id, p.price from customer c left join cart on cart.customer_id=c.id left join cart_product cp on cp.cart_id=cart.id left join product p on p.id=cp.product_id;
+
+coalesce - заменяет ччисло на 0 к примеру (coalesce(sum(p.price), 0)
+select c.name, coalesce(sum(p.price), 0) as orders_sum from customer c left join cart on cart.customer_id=c.id left join cart_product cp on cp.cart_id=cart.id left join product p on p.id=cp.product_id group by c.name;
+
+group by - сгруппировать по
+order by - отсортировать по (desc - вверху самые большие значения)
+
+having - отсортируем по значением больше 0 (отличия от where в том что having фильтрует группы)
+having всегда агрегирующая функция
+where - фильтрует конкретные строки
+
+в postgres если order by работает не правильно то использовать
+select * from customer order by name using ~<~;
+проблемма возможна возникнет при неправильной кодировке
+
+select * from customers order by name using ~<~ limit 1 offset 1;
+выдает лимитрированный результат: строк 1 и смещение на 1
